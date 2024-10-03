@@ -148,3 +148,23 @@
       - closer to 1 = better "fit"
       - can only increase with more predictors
       - diminshing returns
+
+== including categorical explanatories?
+- check for no interaction between predictors
+  #image("media/mult_reg_catvar.png")
+  parallel lines 
+  iff $X_2$ doesn't depend on $X_1$ 
+  iff no interaction between $X_1$ and $X_2$
+  iff $X_1$ effect doesn't depend on $X_2$.
+
+  why is this so verbose from the slides :/
+
+- assuming no interaction between predictors:
+  - include a binary indicator/dummy variable (1 if smoker, 0 else)
+  - call the category defined as 0 a "baseline" category
+
+- if a categorical variable has, say, 3 options, we get _2_ dummy variables, both binary with 0 representing baseline group.
+  - "controlling for years of seniority, dept A makes X less than dept C on average"
+  - "holding dept constant, we estimate for every extra year of seniority, salary increases by X on average"
+
+  TODO pg 57
