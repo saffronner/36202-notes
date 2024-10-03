@@ -3,6 +3,8 @@
   paper: "us-letter"
 )
 #outline(indent: 1em)
+#let predictedby = $#h(0.25em) ~ #h(0.25em)$
+
 = review
 - big picture of applied stats: see 36200 image idk
 - we have statistics ($overline(x), hat(p), ...$)  and standard error ($"SE"_(overline(x)), "SE"_hat(p), ...$)
@@ -92,3 +94,57 @@
   + *predict* of $Y$ from $X$ (for individual with $X$ or all people with $X$)
     - the equation predicts the point estimate of $Y$ given $X$
     - get prediction vs confidence interval via R for probable values of $Y$ for individual or all at $X$
+
+== Nonlinear Relationships?
+- can use a nonlinear model (same four error assumptions)
+- can transform it 
+- transformations often preferred: fewer parameters make a simpler model
+- make sure to not overfit!
+
+= Multiple Regression
+- we're often interested in predicting a $Y$ from multiple explanatory $X_i$
+- when contribution from each $X_i$ is linear, we have _multiple linear regression_:
+  $
+  Y_i = beta_0 + beta_1 X_1 + ... + beta_p X_p + epsilon_i
+  $
+  where errors are
+  - independent
+  - mean 0 
+  - contant stddev
+  - normal
+
+- $p+2$ parameters: $beta_({0-p})$ and $sigma$
+  - like SLR, $sigma$ is stddev of  errors, ie typical deviation of $Y$ from regression hyperplane
+  - $hat(sigma)$ in R is still "residual standard error"
+
+- each $beta_i$ is the avg change in $Y$ when $X_i$ increases by 1 unit and the other $X$s remain fixed
+
+- eg `school.mod = lm(GPA ~ IQ + SelfConcept, data=school)`
+
+- to apply the model:
+  + *state* the model
+  + *validate* the data works for the model with EDA
+    - scatterplots of $Y$ against _each_ explanatory (w/ `pairs` plot). linearity: visual inspection
+    - errors are:
+      - independent: residual plot. residuals "patternlessly" above and below 0 line.
+      - mean 0: residual plot. reasonably centered around 0.
+      - constant stddev: residual plot. reasonably constant spread, scanning left to right 
+    - if there are problems, consider diff model/transformations
+    - low multicollinearity (each $X_i$ weakly correlated with each other) (might otherwise get mathematically impossible/conceptually inappropriate, misleading results. see `media/high_multicollinearity`)
+      - can _informally_ investigate via: correlation matrix, odd parameter estimates, oddly large estimate stderrs
+      - mathematically diagonse via variance inflation factor (vif)
+        - let a model be $Y predictedby X_1 + X_2 + X_3$
+        - vif of $X_i$ is $1/(1-R^2)$, with $R^2$ from $X_i predictedby$ the other $X$es. 
+        - i.e., vif of $X_1$ depends on $X_1 predictedby X_2 + X_3$
+        - BUT: just use software.
+        - when high multicol., drop variables: check diff subsets of $X$es, recheck diagnostics for each. find best model with R's _adjusted R-squared_ (adjusts for different number of explanatory variables. otherwise, R-squared would be higher with more variables, rmbr?)
+        - BUT: also justs use software (best subsets routine)
+  + *estimate* parameters w/ software
+  + *inference*: is data probably showing a relationship between $X_i$ and $Y$?
+    - F-statistic: tests if _any_ of $X_i$ are important for predicting $Y$
+    - individual T-tests: tests if _each_ $X_i$ is a significant predictor _in the presence of all other explanatories_
+  + *predict*: use model, with $R^2$ for its effectiveness
+    - multiple R-squared: proportion of variation in $Y$ that can be explained by all of $X_i$. has a few properties:
+      - closer to 1 = better "fit"
+      - can only increase with more predictors
+      - diminshing returns
