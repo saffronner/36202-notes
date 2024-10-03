@@ -1,3 +1,8 @@
+#set page(
+  numbering: "1 / 1",
+  paper: "us-letter"
+)
+#outline(indent: 1em)
 = review
 - big picture of applied stats: see 36200 image idk
 - we have statistics ($overline(x), hat(p), ...$)  and standard error ($"SE"_(overline(x)), "SE"_hat(p), ...$)
