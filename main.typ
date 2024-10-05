@@ -125,7 +125,7 @@
   + *state* the model
   + *validate* the data works for the model with EDA
     - scatterplots of $Y$ against _each_ explanatory (w/ `pairs` plot). linearity: visual inspection
-    - errors are:
+    - error conditions (also just use a residuals/qqplot):
       - independent: residual plot. residuals "patternlessly" above and below 0 line.
       - mean 0: residual plot. reasonably centered around 0.
       - constant stddev: residual plot. reasonably constant spread, scanning left to right 
@@ -167,4 +167,31 @@
   - "controlling for years of seniority, dept A makes X less than dept C on average"
   - "holding dept constant, we estimate for every extra year of seniority, salary increases by X on average"
 
-  TODO pg 57
+== what if categorical explanatories _have_ interaction?
+- let us investigate a situation where calories$predictedby$carbs, but with slopes that differ depending on whether the item is meat.
+  #image("media/interaction_multreg.png", width: 4in)
+
+- new model: 
+  $ Y = beta_0 + beta_1 X_1 + beta_2 dot "DummyMEAT" + beta_3 (X_1 dot "DummyMEAT") + epsilon $ 
+  - capture the difference in slopes with an "interaction term" (the $beta_3$ term above)
+  - `lm(Calories ~ Carbs + Meat + Carbs:Meat, data=fastfood)`
+
+- assumptions: 
+  - population relationship linear within each level of $"Dummy"$
+  - within each level of $"Dummy"$, the errors are indep, mean 0, const stddev, normal ($"i.i.d.", N(0, sigma^2)$)
+
+- IMPT: if interaction term stat. significant, then those explanatories must be kept (regardless of their individual variable p-values)
+  - this just means that their slopes are indeed different, i think
+  - so if they are not significant go back to normal multiple regression ig 
+
+- coefficient $beta_3$ interpretation:
+  + difference in slopes; i.e., how the quantitative $X_1$ effect depends on the group $"Dummy"$ value
+    - "For every unit increase in $X_1$, the change in $Y$ is $beta_3$ greater/less on avg in $"Dummy"_1$ than in $"Dummy"_0$
+  + equivalently: how the vertical difference between the lines changes; i.e., how the group $"Dummy"$ effect depend son the quantitative $X_1$ value
+    - "For a particular value $x_1$ of the quantitative variable, "
+
+ok yknow what tbh just look at this interpretation:
+#image("media/interaction_interpretation.png")
+
+- and here's a nice lil summary from the notes:
+  #image("media/multreg_interaction_summary.png")
