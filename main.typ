@@ -4,6 +4,7 @@
 )
 #outline(indent: 1em)
 #let predictedby = $#h(0.25em) ~ #h(0.25em)$
+// #show image: []
 
 = review
 - big picture of applied stats: see 36200 image idk
@@ -138,7 +139,8 @@
         - i.e., vif of $X_1$ depends on $X_1 predictedby X_2 + X_3$
         - BUT: just use software.
         - when high multicol., drop variables: check diff subsets of $X$es, recheck diagnostics for each. find best model with R's _adjusted R-squared_ (adjusts for different number of explanatory variables. otherwise, R-squared would be higher with more variables, rmbr?)
-        - BUT: also justs use software (best subsets routine)
+        - BUT: also just use software (best subsets routine)
+        - vif $>= 2.5$ is concerning
   + *estimate* parameters w/ software
   + *inference*: is data probably showing a relationship between $X_i$ and $Y$?
     - F-statistic: tests if _any_ of $X_i$ are important for predicting $Y$
@@ -195,3 +197,5 @@ ok yknow what tbh just look at this interpretation:
 
 - and here's a nice lil summary from the notes:
   #image("media/multreg_interaction_summary.png")
+
+good luck on exam 1 \<3
