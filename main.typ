@@ -64,6 +64,7 @@
 - in 2 variables, eg: for some $X$ axis value, $Y_i = mu_(Y|X) + epsilon_i$
   - we also specify the shape, center, spread of the distribution of errors
 
+#pagebreak()
 = Simple Linear Regression
 - our model idea is $Y_i = beta_0 + beta_1 X + epsilon_i$ where we assume the errors are
   - independent, mean 0, constant stddev/spread (for required for least squares)
@@ -84,6 +85,7 @@
       - independent: residual plot. residuals "patternlessly" above and below 0 line.
       - mean 0: residual plot. reasonably centered around 0.
       - constant stddev: residual plot. reasonably constant spread, scanning left to right 
+      - normal: normal qqplot, follows line
     - if there are problems, consider diff model/transformations
   + *estimate* the parameters
     - use software to find $b_0, b_1, hat(sigma)$
@@ -153,7 +155,7 @@
 
 == including categorical explanatories?
 - check for no interaction between predictors
-  #image("media/mult_reg_catvar.png")
+  // #image("media/mult_reg_catvar.png")
   parallel lines 
   iff $X_2$ doesn't depend on $X_1$ 
   iff no interaction between $X_1$ and $X_2$
@@ -192,10 +194,11 @@
   + equivalently: how the vertical difference between the lines changes; i.e., how the group $"Dummy"$ effect depend son the quantitative $X_1$ value
     - "For a particular value $x_1$ of the quantitative variable, "
 
-ok yknow what tbh just look at this interpretation:
 #image("media/interaction_interpretation.png")
 
-- and here's a nice lil summary from the notes:
-  #image("media/multreg_interaction_summary.png")
+#image("media/MLR_interaction_3level.png")
 
 good luck on exam 1 \<3
+
+#pagebreak(weak: true)
+
