@@ -202,3 +202,105 @@ good luck on exam 1 \<3
 
 #pagebreak(weak: true)
 
+= One way ANOVA
+- recall: we first learn the regression models (Q $->$ Q)
+
+- now we investigate the ANOVA (anal. of variance) models (C $->$ Q)
+
+- big picture: evidence of difference in means of our cat. groups?
+  - $
+      H_0&: mu_1 = mu_2 = ...\
+      H_1&: "means not all same"
+    $
+
+- model: 
+  $
+    y_(i j) = mu_j + epsilon_(i j)
+  $
+  where $j$ indexes the _independent_ cat. populations, $i$ the individuals
+
+  same errors as regression: $i.i.d., N(0, sigma^2)$
+
+  - parameters: each population mean and stddev of pop. errors
+
+- NOTE: One way ANOVA is stat. identical to mult lin reg with categorical X, $k-1$ dummy variables
+
+- apply model steps are similar to regression:
+  + *state* the model
+  + *validate* the data works for the model with EDA
+    - side by side boxplots (Y vs groups), stats for each gruop
+      - if largest stddev $div$ smallest stddev $>= 2$, use $alpha = 0.025$ in F test, instead of $alpha = 0.05$
+    - groups independent: nature of study. eg no time dependence, 1 person 1 group
+    - error conditions:
+      - independent: residual plot. residuals "patternlessly" above and below 0 line.
+      - mean 0: residual plot. reasonably centered around 0.
+      - constant stddev: residual plot. reasonably constant spread, scanning left to right 
+      - normal: qqplot
+    - if there are problems, consider diff model/transformations
+  + *estimate* parameters w/ software
+  + *inference*: is data probably showing a relationship?
+    - significant with ANOVA F-test (see above)
+    - if yes, suppl. with 'multiple comparisons'
+  + *predict*: use model, with $R^2$ for its effectiveness
+    - multiple R-squared: proportion of variation in $Y$ that can be explained by all of $X_i$. has a few properties:
+
+- we may derive the ANOVA F-statistic:
+  #image("media/ANOVA_F_stat.png")
+
+- and ANOVA $R^2$ value:
+  #image("media/ANOVA_Rsquared.png")
+
+- ok, now we believe means not equal. but _which_ means?
+  - pairwise multiple comparison of means. 
+  - we can do this via manual CI inspection for means, but more groups mean much higher false positives.
+  - so we use Tukey test:
+    #image("media/tukey_CI_ANOVA.png")
+
+= Logistic Regression (Simple Binary case)
+- simple (one X) binary (Y = 0 or 1)
+  - we can get proportion from a dataset eg with `prop.table(table(dataframe$succeeded))`
+
+- logistic regression: Q $->$ C wow!
+
+- probability $p = P(Y = 1 | X = x)$
+
+- suppose Y binary, $p$ defn above.
+  - odds favoring Y = 1 are $p/(1-p)$ (IMPT: this just means if odds=3, odds of Y = 1 are 3:1.)
+  - equivalently, $p = "odds"/(1 + "odds")$ via math
+
+- simple binary logistic reg model is 
+  $
+    "odds"_1 = e^(beta_0 + beta_1 X) \
+    "i.e." p = (e^(beta_0+beta_1 X)) / (1 + e^(beta_0 + beta_1 X))
+  $
+  no error term! $|beta_1|$ measures "steepness" of log
+
+- linreg: eyeball linearity. hard with logistic. use "goodness of fit" test in R (rg though labs for `ResourceSelection` library, `hoslem.test`)
+  - output $p$ value: $H_0:$ good fit.
+
+- once GOF test passes for sample, test model for appropriateness for population. check $beta_1$ hypotheses test ($H_A: beta_1 != 0$, sig. relationship)
+
+- interpretation: 
+  - $e^(beta_0)$: odds, on avg, favoring Y = 1 when X = 0.
+  - $e^(beta_1)$: for every unit incr in X, odds are _multiplied_ by this. (odds ratio!)
+
+- inference: sign. reln? just look at $p$ value for $beta_1$ as usual
+  - let's say a CI for $beta_1$ is (lower, upper). to get CI for odds ratio, just $e^"lower"$ etc
+
+- in linreg, $R^2$ measures association. here, there is no mathy nice measure. 
+
+- we use a rough measure: percentage of "concordant pairs"
+  - consider: 11 success 14 failures. $11 dot 14 = 154$ pairs. 
+  - a pair is concordant iff the success has a higher prob than the failure in the pair (discordant otherwise)
+  - where prob is taken from predicting with the model
+
+- putting it all together:
+  #image("media/binary_logreg_ex.png")
+  ```R
+  titaniclogit <- glm(
+    factor(survived) ~ sex + age + factor(pclass), 
+    family = binomial(link="logit"),
+    data = titanic
+  )
+  summary(titaniclogit)
+  ```
