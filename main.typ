@@ -304,3 +304,21 @@ good luck on exam 1 \<3
   )
   summary(titaniclogit)
   ```
+
+= (Multi)nomial Logistic Regression
+
+= Ordinal Logistic Regression
+== Proportional-Odds Cumulative Logit Model
+(end material for exam 2)
+
+= Introduction to Statistical Learning
+= Classifiers
+== Logistic Regression as Classification
+== Discriminant Analysis
+== Logistic, LDA, QDA
+== Classification Trees
+== some techniques for minimizing overfitting
+== More about classification tress: The Gini Index
+= Intro to Clustering
+== Agglomerative
+== $k$-means
