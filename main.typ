@@ -313,12 +313,42 @@ good luck on exam 1 \<3
 
 = Introduction to Statistical Learning
 = Classifiers
+- commonly, we search for cat. response (e.g. pedestrian or not?)
+- find boundary in variable space to separate
+- EDA: pairs plot
 == Logistic Regression as Classification
+- take log reg, then separate by which side of $0.5$ $p$ is on
 == Discriminant Analysis
-== Logistic, LDA, QDA
+- only defined for quantitative $X$
+- assume within each class, variables are Normal
+- Linear DA: boundaries are lines/hyperplanes
+- Quadratic DA: boundaries are quadratic hypersurfaces
+  - assumed Normals can be "stretched" or "twisted"
 == Classification Trees
-== some techniques for minimizing overfitting
+- split data into those hyperrectangular things: make decision tree!
+- higher nodes are more important
+- can use both cat. and quant. $X$
+- CAREFUL overfitting!
+  - prune to min decisions manually or via algo
+  - split b/t train and test data
+  - ensembles
+    - bagging trains models and takes avg (RANDOM FOREST!)
+    - boosting sequentially combines and error corrects (takes weighted avg)
 == More about classification tress: The Gini Index
+- tree algo decides splits via on purity, often via Gini index
+- Gini $in [0,1]$ of decreasing purity
 = Intro to Clustering
-== Agglomerative
+- UNSUPERVISED!
+- create clusters in variable space
+== hierarchical aka agglomerative
+- start w/ each obs. in a cluster, aggregate based on defn of "closeness"
+- "closeness"
+  - single linkage: close as nearest nodes (form snakes)
+  - complete linkage: close as furthest nodes (form balls)
+  - avg linkage: balanced
+- assess via adjusted rand index (ARI) $in [-1,1]$ of increasing quality
 == $k$-means
+- hyperspherical clusters in variable space
+- very fast algo, simple, better for data w/ Normal around averages
+- minimize within-cluster sum of squares (WSS)
+- choose $k$ via elbow plot: incr $k$ untill WSS doesn't steeply drop (care overfitting!)
