@@ -1,23 +1,10 @@
 #set page(
   numbering: "1 / 1",
-  paper: "us-letter"
+  paper: "us-letter",
 )
-#outline(indent: 1em)
+// #outline(indent: 1em)
 #let predictedby = $#h(0.25em) ~ #h(0.25em)$
-// #show image: []
-
-= review
-- big picture of applied stats: see 36200 image idk
-- we have statistics ($overline(x), hat(p), ...$)  and standard error ($"SE"_(overline(x)), "SE"_hat(p), ...$)
-- population: literally everyone, hard to measure
-- sample: subset of population
-- parameter: perfect summary (e.g. mean height)
-- statistic: measurable summary (e.g. mean height of sample)
-- stderr of stat: typical variation due to random sampling.
-  - diff error formulae for each stat.
-  - this course: simply calc with software
-- inference: give estimate and measure of how far off it might be
-  - if statistic is random and sampling distribution known, we have probabilistic inference; can get p-value or margin or err
+#show image: []
 
 == 1 variable EDA
 - categorical
@@ -179,6 +166,7 @@
   $ Y = beta_0 + beta_1 X_1 + beta_2 dot "DummyMEAT" + beta_3 (X_1 dot "DummyMEAT") + epsilon $ 
   - capture the difference in slopes with an "interaction term" (the $beta_3$ term above)
   - `lm(Calories ~ Carbs + Meat + Carbs:Meat, data=fastfood)`
+  - also try actual code: `summary(lm(Sepal.Length ~ Petal.Width * Species, data=iris))`
 
 - assumptions: 
   - population relationship linear within each level of $"Dummy"$
@@ -221,7 +209,7 @@ good luck on exam 1 \<3
 
   same errors as regression: $i.i.d., N(0, sigma^2)$
 
-  - parameters: each population mean and stddev of pop. errors
+  - $k+1$ parameters: each population mean and stddev of pop. errors
 
 - NOTE: One way ANOVA is stat. identical to mult lin reg with categorical X, $k-1$ dummy variables
 
@@ -229,14 +217,15 @@ good luck on exam 1 \<3
   + *state* the model
   + *validate* the data works for the model with EDA
     - side by side boxplots (Y vs groups), stats for each gruop
-      - if largest stddev $div$ smallest stddev $>= 2$, use $alpha = 0.025$ in F test, instead of $alpha = 0.05$
+      - if largest stddev $div$ smallest stddev $>= 2$, use $alpha = 0.025$ in F test, instead of $alpha = 0.05$\
+        (called Keppel Correction/spread rule of thumb)
     - groups independent: nature of study. eg no time dependence, 1 person 1 group
     - error conditions:
       - independent: residual plot. residuals "patternlessly" above and below 0 line.
       - mean 0: residual plot. reasonably centered around 0.
       - constant stddev: residual plot. reasonably constant spread, scanning left to right 
       - normal: qqplot
-    - if there are problems, consider diff model/transformations
+    - if there are problems, consider diff model/transformations (OF THE RESPONSE)
   + *estimate* parameters w/ software
   + *inference*: is data probably showing a relationship?
     - significant with ANOVA F-test (see above)
@@ -244,7 +233,21 @@ good luck on exam 1 \<3
   + *predict*: use model, with $R^2$ for its effectiveness
     - multiple R-squared: proportion of variation in $Y$ that can be explained by all of $X_i$. has a few properties:
 
-- we may derive the ANOVA F-statistic:
+- we may derive the ANOVA F-statistic (dist shaped soooorta like chisq):
+  #grid(
+    columns: 2,
+    gutter: 0.5em,
+    align: horizon,
+    table(
+      columns: 6,
+      ``, `Df`, `Sum Sq`, `Mean Sq`, `F value`, `Pr(>F)`,
+      `Major`, `3`, `939.9`, `313.28`, `46.6`, `<2e-16`,
+      `Residuals`, `136`, `914.3`, `6.72`
+    ),
+    $F = 46.6 = 313.28/6.72 = (939.9\/3)/(914.3\/136)\
+    R^2 = 939.9/(939.9 + 914.3) = 50.69%$
+
+  )
   #image("media/ANOVA_F_stat.png")
 
 - and ANOVA $R^2$ value:
@@ -253,7 +256,7 @@ good luck on exam 1 \<3
 - ok, now we believe means not equal. but _which_ means?
   - pairwise multiple comparison of means. 
   - we can do this via manual CI inspection for means, but more groups mean much higher false positives.
-  - so we use Tukey test:
+  - so we use Tukey test (check tukey intervals don't overlap):
     #image("media/tukey_CI_ANOVA.png")
 
 = Logistic Regression (Simple Binary case)
@@ -270,7 +273,8 @@ good luck on exam 1 \<3
 
 - simple binary logistic reg model is 
   $
-    "odds"_1 = e^(beta_0 + beta_1 X) \
+    log(p/(1-p)) = beta_0 + beta_1 X\
+    "i.e. odds"_1 = e^(beta_0 + beta_1 X) \
     "i.e." p = (e^(beta_0+beta_1 X)) / (1 + e^(beta_0 + beta_1 X))
   $
   no error term! $|beta_1|$ measures "steepness" of log
@@ -304,10 +308,26 @@ good luck on exam 1 \<3
   )
   summary(titaniclogit)
   ```
+- Multiple case: adding more betas just like in linear reg (... is ... times more ... on avg or whatever)
 
 = (Multi)nomial Logistic Regression
+- Y more than 2 groups
+- odds favoring finishing category $n$ over reference $c$, each has their own logistic reg model
+- $c$ categories: $c-1$ bin log. reg.s w/ $k+1$ params (has unique $beta_{0-k}$ per cat.)
+- "estimate that for every year older, the odds of pref candidate A over mayor are multplied by 0.82 on avg, controlling for ..."
+- "estimate that the odds of favoring B over the mayer for female voters are 3.29 times the odds that male voters favor B over the mayor, on avg, controlling for ...""
 
 = Ordinal Logistic Regression
+- Y more than 2 groups 
+- $P(Y<=1)\
+P(Y<=2)\
+...\
+P(Y<= c-1)$
+  (at $c$ prob is always 1. not interesting.)
+- cum odds $(P(Y<=j))/(1- P(Y<=j)) = Y<=j$ on top
+- otherwise same as multinomial ... EXCEPT only the constant betas differ.
+- "odds of no higher than..."
+
 == Proportional-Odds Cumulative Logit Model
 (end material for exam 2)
 
